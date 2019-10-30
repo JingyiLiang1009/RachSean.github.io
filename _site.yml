@@ -1,0 +1,18 @@
+name: "Jingyi Liang"
+output_dir: "."
+navbar:
+  title: "Home"
+  left:
+    - text: "Experience"
+      href: MyLife.html
+    - text: "Blog"
+      href: Blog.html
+  right:
+    - icon: fa-envelope fa-lg
+      href: mailto:<jingyiliang19@163.com>
+    - icon: fa-github fa-lg
+      href: http://github.com/RachSean
+    - icon: fa-twitter fa-lg
+      href: https://twitter.com/RachSean1
+output:
+  html_document

@@ -1,0 +1,39 @@
+---
+---
+
+<link rel="stylesheet" href="styles.css" type="text/css">
+
+\
+
+## Working Experience
+
+<span style="font-size:20px;">
+Institute of Automation, Chinese Academy of Sciences - Research Assistant.
+</span>
+
+
+<span style="font-size:20px;">
+Wuhan Education First - Assistant Teacher.
+</span> 
+
+
+
+
+
+## Research Findings
+
+<span style="font-size:20px;">
+Paper [“A Spatially Constrained Multi-Auto-encoder Approach for Multivariate Geochemical Anomaly Recognition.”](https://www.sciencedirect.com/science/article/pii/S0098300418305120#!) Co-author. 
+</span>
+
+
+<span style="font-size:20px;">
+Software Copyright “SCMA-Based Multivariate Geochemical Anomaly Intelligent Recognition.” Fourth Author. 
+</span>
+
+
+<span style="font-size:20px;">
+Patent “Method and Flow for Multivariate Geochemical Anomaly Recognition Based on Convolutional Auto-encoder Neural Network.”
+<span>
+
+

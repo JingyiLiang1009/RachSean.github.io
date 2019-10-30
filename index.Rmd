@@ -1,0 +1,26 @@
+---
+output: 
+  html_document:
+    theme: paper
+---
+
+\
+
+<img src="https://rachsean.github.io/Mypic.JPG" style="width:30%; border:10px solid; margin-right: 20px" align="left">
+
+<span style="font-size:20px;">
+I graduated from the [China University of Geosciences](http://en.cug.edu.cn/) with a Bachelor of Science degree in Geographic Information Science in 2019. 
+</span>
+<span style="font-size:20px;">
+Now I am a master student majoring in Biostatistics and data science in the [Healthcare Policy and Research Department](https://hpr.weill.cornell.edu/) at [Weill Cornell Medicine](https://weill.cornell.edu/).
+</span>
+
+
+<span style="font-size:20px;">
+My full Resume is available [here](https://rachsean.github.io/Resume.pdf). 
+</span>
+
+
+
+
+

@@ -1,0 +1,213 @@
+---
+title: "Data Wrangling with dplyr"
+output: 
+    html_document:
+        toc: TRUE
+        toc_float: TRUE
+---
+
+This blog provides an introduction to data wrangling with dplyr.
+
+
+# Part I - Introduction 
+
+In data analysis, it is often necessary to clean, organize and transform the original data set. The common data collation and transformation work mainly includes the selection of specific analysis variables, the screening of data records meeting the conditions, sorting by one or several variables, processing the original variables and generating new variables, summarizing the data and grouping them, such as calculating the average value of each group.
+
+
+```{r setup, include=FALSE,results='asis'}
+knitr::opts_chunk$set(cache=TRUE, error=FALSE, message=FALSE, warning=FALSE, tidy.opts=list(width.cutoff=60),tidy=TRUE)
+```
+
+## Package - dplyr
+
+The package will be used to do data wrangling in this blog is [dplyr](https://dplyr.tidyverse.org/)
+
+The dplyr package is the masterwork of [Hadley Wickham](http://hadley.nz/)(author of the ggplot2 package, known as "a person who changed R"). He further separated and strengthened functions such as ddply() in the original plyr package, and focused on accepting dataframe objects, which greatly increased the speed and provided a more robust interface with other database objects.
+
+
+### dplyr overview
+
+
+dplyr is a grammar of data manipulation, providing a consistent set of verbs that help users solve the most common data manipulation challenges.
+
+Here are some of the basic functions commonly used in the dplyr package:
+
+[select()](https://dplyr.tidyverse.org/reference/select.html) picks variables based on their names.
+
+[filter()](https://dplyr.tidyverse.org/reference/filter.html) picks cases based on their values.
+
+[mutate()](https://dplyr.tidyverse.org/reference/mutate.html) adds new variables that are functions of existing variables.
+
+[summarise()](https://dplyr.tidyverse.org/reference/summarise.html) reduces multiple values down to a single summary.
+
+[arrange()](https://dplyr.tidyverse.org/reference/arrange.html) changes the ordering of the rows.
+
+### Installation
+
+```{r,results='asis'}
+install.packages("dplyr",repos = "http://cran.us.r-project.org")
+library(dplyr)
+```
+
+### Example Data
+
+To explore the basic data manipulation verbs of the dplyr package, we will use the nycflights13: flights data set. The data set includes 336,776 flights from New York in 2013. The data came from the Bureau of Transportation Statistics and was recorded in the file nycflights13.
+
+```{r}
+# Load Example Data
+library(nycflights13)
+library(tidyverse)
+```
+
+```{r}
+# Overview of the dataset
+dim(flights)
+```
+The dataset has 336776 rows and 19 columns.
+
+```{r}
+# View the proporties of dataset
+class(flights)
+```
+
+```{r}
+# View the columns of dataset
+names(flights)
+```
+
+
+
+# Part II - Functions
+
+The five main verbs (or functions) for working with data are as follows.
+
+Each function takes a dataframe as its first argument and returns a dataframe.
+
+## Select 
+
+select() can take a subset of the columns from a dataset.
+
+select() for column selection, any comma-separated condition can be satisfied. Common auxiliary filtering functions include:
+
+  1) a:b (From column a to column b), - except for these columns
+  
+  2) starts_with(),ends_with(),contains(),matches(),num_range(),one_of(),everything(),last_col().
+
+### Example
+
+Select the year, month, and day variables from the dataset.
+
+```{r}
+select(flights,year,month,day)
+# or you can write like this
+select(flights,year:day)
+# You will get the same selection result
+```
+
+## Filter
+
+filter() can take a subset of rows from a dataset.
+
+filter() for rows selection, and the comma-separated conditions should be satisfied at the same time. 
+
+
+### Example
+
+Select all flights on January 1.
+
+```{r}
+filter(flights,month==1,day==1)
+```
+
+## Mutate
+
+mutate() can add new variables and preserve existing ones from a dataset.
+
+### Example
+
+We can use mutate() to create two new variables called "gain", "speed".
+
+```{r}
+mutate(flights,gain=arr_delay-dep_delay,speed=distance/air_time*60)
+```
+
+
+## Arrange
+
+arrange() can sort a dataframe by one or more of it’s columns.Desc () is used for descending order.
+
+
+### Example
+
+Arrange 'arr_delay' in descending order.
+
+```{r}
+arrange(flights,desc(arr_delay))
+```
+
+## Summarise
+
+summarise() can collapse the data into a single row, and give a summary of the data.
+
+### Example
+
+Calculate the mean departure delay time for all flights and name it "delay".
+
+```{r}
+flights %>% 
+  summarise(delay=mean(dep_delay,na.rm = TRUE))
+```
+
+
+
+# Part III - Advanced
+
+
+## Example
+
+Find plane (specified by tailnum variable) traveled the most times from New York City airports in 2013. After that, draw a graphic to show the number of trips per week over the year.
+
+```{r,results='asis',fig.align='center'}
+# load packages
+library(ggplot2)
+library(lubridate)
+
+# Exclude planes without tailnum
+max.plane <- flights %>%
+  filter(!is.na(tailnum))
+
+# Summarise the flight times of each tailnum.
+max.plane <- max.plane %>%
+  group_by(tailnum) %>%
+  summarise(number.flights = n())
+
+# Find the plane traveled the most times from New York City airports in 2013
+max.plane <- max.plane %>%
+  filter(number.flights == max(number.flights))
+
+# Find the tailnum of the plane
+max.plane <- max.plane %>% 
+  select(tailnum) %>% unlist()
+
+paste("The tailnum of the plane traveled the most times from New York City airports in 2013 is:",max.plane)
+
+# Plot the number of trips per week over the year(use package(lubridate) to calculate the week)
+flights.max.plane <- flights %>%
+  filter(tailnum == max.plane) %>%
+  mutate(date = paste(year,month,day,sep='-')) %>%
+  mutate(week=week(ymd(date))) %>%
+  group_by(week) %>%
+  summarise(number.flights=n()) %>%
+  right_join(data.frame(week=1:52)) %>%
+  mutate(number.flights=ifelse(is.na(number.flights),
+                               0,
+                               number.flights))
+
+ggplot(flights.max.plane,aes(x=week,y=number.flights)) +
+  geom_line()+
+  xlab('Week') +
+  ylab('Number of Flights') +
+  ggtitle('Number of Flights for Plane N725MQ')
+
+```
+
